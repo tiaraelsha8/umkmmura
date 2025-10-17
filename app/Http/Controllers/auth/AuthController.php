@@ -13,22 +13,25 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 
-class AdminAuthController extends Controller
+class AuthController extends Controller
 {
-    // Tampilkan halaman login
     public function showLogin()
     {
-        return view('auth.login-admin');
+        return view('auth.login');
     }
 
     // Proses login
     public function login(Request $request)
     {
-        // ✅ Validasi input
-        $request->validate([
-            'username' => 'required|string',
-            'password' => 'required|string',
-        ]);
+        // ✅ Validasi input + reCAPTCHA
+        // $request->validate([
+        //     'username' => 'required',
+        //     'password' => 'required',
+        //     'g-recaptcha-response' => 'required|captcha',
+        // ], [
+        //     'g-recaptcha-response.required' => 'Please verify that you are not a robot.',
+        //     'g-recaptcha-response.captcha' => 'Captcha error! try again later or contact site admin.',
+        // ]);
 
         // Buat key berdasarkan IP dan username untuk rate limit
         $key = Str::lower($request->input('username')) . '|' . $request->ip();
@@ -45,13 +48,21 @@ class AdminAuthController extends Controller
         // ✅ Ambil credential username & password saja (tanpa CAPTCHA!)
         $credentials = $request->only('username', 'password');
 
-        // Proses login
-        if (Auth::guard('admin')->attempt($credentials)) {
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            RateLimiter::clear($key);
+            RateLimiter::clear($key); // Clear hitungan jika berhasil login
 
-            session(['username' => Auth::guard('admin')->user()->username]);
-            return redirect()->route('backend.dashboard');
+            $user = Auth::user(); // ✅ ambil user aktif
+
+            if ($user->role === 'superadmin') {
+                return redirect()->route('backend.dashboard')->with('success', 'Selamat datang Superadmin!');
+            } elseif ($user->role === 'admin') {
+                return redirect()->route('backend.dashboard')->with('success', 'Selamat datang Admin!');
+            } elseif ($user->role === 'viewer') {
+                return redirect()->route('backend.dashboard')->with('success', 'Selamat datang Viewer!');
+            } else {
+                abort(403, 'Akses tidak diizinkan');
+            }
         }
 
         // Gagal login, tambah hitungan rate limit
@@ -65,12 +76,11 @@ class AdminAuthController extends Controller
     // Logout
     public function logout(Request $request)
     {
-        // ✅ Logout pakai guard admin
-        Auth::guard('admin')->logout();
-
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login.admin')->with('success', 'Anda telah logout');
+        // Tambahkan pesan info di session setelah logout
+        return redirect()->route('login')->with('success', 'Anda telah logout');
     }
 }

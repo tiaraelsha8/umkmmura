@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 // LOGIN
-use App\Http\Controllers\auth\AdminAuthController;
+use App\Http\Controllers\auth\AuthController;
 
 // BACKEND
 use App\Http\Controllers\backend\DashboardController;
@@ -16,24 +16,20 @@ use App\Http\Controllers\frontend\HomeController;
 // });
 
 // ===================== LOGIN ADMIN =====================
-Route::middleware('guest:admin')->group(function () {
+Route::middleware('guest')->group(function () {
 
-    Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login.admin');
-    Route::post('/login', [AdminAuthController::class, 'login'])->name('login.admin.submit');
+    Route::get('/umkmlogin', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/umkmlogin', [AuthController::class, 'login'])->name('login.submit');
 });
 
-Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ===================== BACKEND =====================
-Route::prefix('admin')->middleware('auth:admin')->group(function () {
+Route::prefix('admin')->middleware('auth')->group(function () {
     
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('backend.dashboard');
 
-    // Hanya superadmin yang boleh kelola user
-    Route::middleware(['role:superadmin'])->group(function () {
-        Route::resource('/users', UserController::class);
-    });
-
+   
 });
 
 // ===================== FRONTEND =====================

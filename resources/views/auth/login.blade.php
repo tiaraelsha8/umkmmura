@@ -54,7 +54,7 @@
                                         </div>
                                     @endif
                                     
-                                    <form class="user" method="POST" action="{{ route('login.admin.submit') }}">
+                                    <form class="user" method="POST" action="{{ route('login.submit') }}">
                                         @csrf
 
                                         <div class="form-group">
