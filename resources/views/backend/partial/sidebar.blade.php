@@ -45,7 +45,7 @@
       @if (Auth::check() && Auth::user()->role === 'superadmin')
 
           <li class="nav-item">
-              <a class="nav-link" href="">
+              <a class="nav-link" href="{{ route ('user.index') }}">
                   <i class="fas fa-fw fa-users"></i>
                   <span>Kelola User</span></a>
           </li>

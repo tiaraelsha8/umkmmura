@@ -7,15 +7,13 @@ use App\Http\Controllers\auth\AuthController;
 
 // BACKEND
 use App\Http\Controllers\backend\DashboardController;
+use App\Http\Controllers\backend\UserController;
 
 // FRONTEND
 use App\Http\Controllers\frontend\HomeController;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 
-// ===================== LOGIN ADMIN =====================
+// ===================== LOGIN =====================
 Route::middleware('guest')->group(function () {
 
     Route::get('/umkmlogin', [AuthController::class, 'showLogin'])->name('login');
@@ -28,6 +26,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::prefix('admin')->middleware('auth')->group(function () {
     
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('backend.dashboard');
+
+    Route::resource('/user', UserController::class);
 
    
 });
