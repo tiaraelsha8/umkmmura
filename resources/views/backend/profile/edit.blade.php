@@ -1,7 +1,7 @@
 @extends('backend.layouts.master')
 
 @section('judul')
-    Halaman Edit User
+    Halaman Edit Profile
 @endsection
 
 @section('content')
@@ -20,7 +20,7 @@
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">Edit Data User</h1>
+        <h1 class="h3 mb-2 text-gray-800">Edit Data Profile</h1>
 
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
@@ -29,7 +29,7 @@
             <div class="card-body">
                 <div class="table-responsive">
 
-                    <form action="{{ route('user.update', $user->id) }}" method="POST">
+                    <form action="{{ route('profile.update', $user->id) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="box-body">
@@ -59,9 +59,23 @@
                             @enderror
 
                             <div class="form-group position-relative">
-                                <label>Password</label>
+                                <label>Password Lama</label>
+                                <input type="password" class="form-control" name="current_password" id="password"
+                                    placeholder="isikan password lama saat mengubah email,username,nama,password">
+                                <span class="position-absolute" style="right:10px; top:38px; cursor:pointer;"
+                                    onclick="this.previousElementSibling.type = this.previousElementSibling.type === 'password' ? 'text' : 'password';this.innerHTML = this.previousElementSibling.type === 'password' ? 
+                                    '<i class=\'fas fa-eye\'></i>' : '<i class=\'fas fa-eye-slash\'></i>';">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                            @error('current_password')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+
+                            <div class="form-group position-relative">
+                                <label>Password Baru</label>
                                 <input type="password" class="form-control" name="password" id="password"
-                                    placeholder="kosongkan kalau tidak ubah password">
+                                    placeholder="kosongkan jika tidak ingin mengubah password">
                                 <span class="position-absolute" style="right:10px; top:38px; cursor:pointer;"
                                     onclick="this.previousElementSibling.type = this.previousElementSibling.type === 'password' ? 'text' : 'password';this.innerHTML = this.previousElementSibling.type === 'password' ? 
                                     '<i class=\'fas fa-eye\'></i>' : '<i class=\'fas fa-eye-slash\'></i>';">
@@ -69,6 +83,20 @@
                                 </span>
                             </div>
                             @error('password')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+
+                            <div class="form-group position-relative">
+                                <label>Konfirmasi Password</label>
+                                <input type="password" class="form-control" name="password_confirmation" id="password"
+                                    placeholder="isikan jika mengubah password">
+                                <span class="position-absolute" style="right:10px; top:38px; cursor:pointer;"
+                                    onclick="this.previousElementSibling.type = this.previousElementSibling.type === 'password' ? 'text' : 'password';this.innerHTML = this.previousElementSibling.type === 'password' ? 
+                                    '<i class=\'fas fa-eye\'></i>' : '<i class=\'fas fa-eye-slash\'></i>';">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                            @error('password_confirmation')
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
 
@@ -88,9 +116,16 @@
 
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-primary">Simpan</button>
-                                <a href="{{ route('user.index') }}" class="btn btn-default">Kembali</a>
+                                <a href="{{ route('backend.dashboard') }}" class="btn btn-default">Kembali</a>
                             </div>
                         </div>
+
+                        @if (session('secondsRemaining'))
+                            <div class="alert alert-warning">
+                                Anda telah mencoba terlalu banyak. Tunggu <span id="countdown"
+                                    style="font-weight: bold"></span>
+                            </div>
+                        @endif
                     </form>
                 </div>
             </div>
