@@ -126,7 +126,7 @@
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
-                                    <div class="chart-area">
+                                    <div class="chart-areachart-area">
                                         <canvas id="myAreaChart"></canvas>
                                     </div>
                                 </div>
