@@ -78,7 +78,7 @@
                                     <option value="">-- Pilih Role --</option>
                                     <option value="superadmin" {{ $user->role === 'superadmin' ? 'selected' : '' }}>
                                         Superadmin</option>
-                                    <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}</option>
+                                    <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
                                     <option value="viewer"{{ $user->role === 'viewer' ? 'selected' : '' }}>View</option>
                                 </select>
                             </div>
