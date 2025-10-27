@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Halaman Login</title>
+    <title>Halaman Lupa Password</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('templateadmin/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -20,11 +20,9 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('templateadmin/css/sb-admin-2.min.css') }}" rel="stylesheet">
 
-    <!-- fish eye-->
+     <!-- fish eye-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <!-- Google reCAPTCHA Script -->
-    {!! NoCaptcha::renderJs() !!}
 
 </head>
 
@@ -41,36 +39,39 @@
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                            <div class="col-lg-6 d-none d-lg-block bg-password-image"></div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Masukkan username & password untuk login</h1>
+                                        <h1 class="h4 text-gray-900 mb-2">Masukkan Password Baru</h1>
                                     </div>
 
-                                    @if (session('success'))
-                                        <div class="alert alert-success text-center">
-                                            {{ session('success') }}
+                                    {{-- Pesan sukses --}}
+                                    @if (session('status'))
+                                        <div class="alert alert-success">
+                                            {{ session('status') }}
                                         </div>
                                     @endif
 
-                                    @if ($errors->has('username'))
-                                        <div class="alert alert-danger text-center">
-                                            {{ $errors->first('username') }}
+                                    {{-- Pesan error validasi atau kegagalan --}}
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            {{ $errors->first() }}
                                         </div>
                                     @endif
-
-                                    <form class="user" method="POST" action="{{ route('login.submit') }}">
+                                    
+                                      <form action="{{ route('password.update') }}" method="POST" class="user">
                                         @csrf
+                                        <input type="hidden" name="token" value="{{ $token }}">
 
                                         <div class="form-group">
-                                            <input type="text" name="username" class="form-control form-control-user"
-                                                placeholder="Masukkan Username...">
+                                            <input type="email" name="email" class="form-control form-control-user" value="{{ $email ?? old('email') }}"
+                                                required placeholder="Masukkan Email Anda...">
                                         </div>
 
-                                        <div class="form-group position-relative">
+                                          <div class="form-group position-relative">
                                             <input type="password" name="password" id="password"
-                                                class="form-control form-control-user" placeholder="Password">
+                                                class="form-control form-control-user" placeholder="Password Baru">
                                             <span class="position-absolute"
                                                 style="right:15px; top:10px; cursor:pointer;"
                                                 onclick="this.previousElementSibling.type = this.previousElementSibling.type === 'password' ? 'text' : 'password';
@@ -81,20 +82,22 @@
                                             </span>
                                         </div>
 
-                                        {{-- ✅ reCAPTCHA --}}
-                                        <div class="mb-3">
-                                            {!! NoCaptcha::display() !!}
-                                            @error('g-recaptcha-response')
-                                                <div class="text-danger small mt-1">{{ $message }}</div>
-                                            @enderror
+                                          <div class="form-group position-relative">
+                                            <input type="password" name="password_confirmation" id="password_confirmation"
+                                                class="form-control form-control-user" placeholder="Konfirmasi Password">
+                                            <span class="position-absolute"
+                                                style="right:15px; top:10px; cursor:pointer;"
+                                                onclick="this.previousElementSibling.type = this.previousElementSibling.type === 'password' ? 'text' : 'password';
+                                                this.innerHTML = this.previousElementSibling.type === 'password' 
+                                                ? '<i class=\'fas fa-eye\'></i>' 
+                                                : '<i class=\'fas fa-eye-slash\'></i>';">
+                                                <i class="fas fa-eye"></i>
+                                            </span>
                                         </div>
 
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            Login
+                                            Reset Password
                                         </button>
-                                        <a href="{{ route('password.request') }}" class="btn btn-secondary btn-user btn-block">
-                                            Lupa Password
-                                        </a>
                                     </form>
                                     <hr>
                                 </div>
@@ -110,14 +113,14 @@
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="{{ 'templateadmin/vendor/jquery/jquery.min.js' }}"></script>
-    <script src="{{ 'vendor/bootstrap/js/bootstrap.bundle.min.js' }}"></script>
+    <script src="{{ asset('templateadmin/vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('templateadmin/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="{{ 'templateadmin/vendor/jquery-easing/jquery.easing.min.js' }}"></script>
+    <script src="{{ asset('templateadmin/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="{{ 'templateadmin/js/sb-admin-2.min.js' }}"></script>
+    <script src="{{ asset('templateadmin/js/sb-admin-2.min.js') }}"></script>
 
 </body>
 
