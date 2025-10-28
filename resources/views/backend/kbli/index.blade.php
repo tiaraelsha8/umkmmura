@@ -48,7 +48,7 @@
                                             onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                             @csrf
                                             @method('DELETE')
-                                            <a href="{{ route('user.edit', $value->id_kbli) }}"
+                                            <a href="{{ route('kbli.edit', $value->id_kbli) }}"
                                                 class="btn btn-warning btn-sm">Edit</a>
                                             <input type="submit" value="Hapus" class="btn btn-danger btn-sm">
                                         </form>

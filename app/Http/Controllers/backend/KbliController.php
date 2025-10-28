@@ -43,7 +43,9 @@ class KbliController extends Controller
         ]);
 
         //redirect to index
-        return redirect()->route('kbli.index')->with(['success' => 'Data Berhasil Disimpan!']);
+        return redirect()
+            ->route('kbli.index')
+            ->with(['success' => 'Data Berhasil Disimpan!']);
     }
 
     /**
@@ -69,19 +71,23 @@ class KbliController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'kode' => 'required|unique:kblis,kode,' . $kbli->id_kbli,
+            'kode' => 'required|unique:kblis,kode,' . $id . ',id_kbli',
             'nama' => 'required',
             'deskripsi' => 'string|nullable',
         ]);
 
-         Kbli::update([
+        $kbli = Kbli::findOrFail($id);
+
+        $kbli->update([
             'kode' => $request->kode,
             'nama' => $request->nama,
             'deskripsi' => $request->deskripsi,
         ]);
 
         //redirect to index
-        return redirect()->route('kbli.index')->with(['success' => 'Data Berhasil Diedit!']);
+        return redirect()
+            ->route('kbli.index')
+            ->with(['success' => 'Data Berhasil Diedit!']);
     }
 
     /**
@@ -89,19 +95,22 @@ class KbliController extends Controller
      */
     public function destroy(string $id)
     {
-         try {
-            
-         //get by ID
-         $kbli = kbli::findOrFail($id);
+        try {
+            //get by ID
+            $kbli = kbli::findOrFail($id);
 
-         //delete 
-         $kbli->delete();
- 
-         //redirect to index
-         return redirect()->route('kbli.index')->with(['success' => 'Data Berhasil Dihapus!']);
+            //delete
+            $kbli->delete();
+
+            //redirect to index
+            return redirect()
+                ->route('kbli.index')
+                ->with(['success' => 'Data Berhasil Dihapus!']);
         } catch (QueryException $e) {
             // Jika gagal karena masih dipakai (foreign key restrict)
-            return redirect()->route('kbli.index')->with(['error' => 'Tidak bisa menghapus! Jabatan masih digunakan oleh pegawai.']);
+            return redirect()
+                ->route('kbli.index')
+                ->with(['error' => 'Tidak bisa menghapus! Jabatan masih digunakan oleh pegawai.']);
         }
     }
 }
