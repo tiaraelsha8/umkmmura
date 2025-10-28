@@ -11,6 +11,8 @@ use App\Http\Controllers\auth\ResetPasswordController;
 use App\Http\Controllers\backend\DashboardController;
 use App\Http\Controllers\backend\UserController;
 use App\Http\Controllers\backend\ProfileController;
+use App\Http\Controllers\backend\KbliController;
+use App\Http\Controllers\backend\DataUmumController;
 
 // FRONTEND
 use App\Http\Controllers\frontend\HomeController;
@@ -34,16 +36,26 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ===================== BACKEND =====================
-Route::prefix('admin')
-    ->middleware('auth')
-    ->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('backend.dashboard');
+Route::prefix('admin')->middleware('auth')->group(function () {
 
-        Route::resource('/user', UserController::class);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('backend.dashboard');
 
-        Route::get('/profile/edit/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/edit/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::resource('/user', UserController::class);
+
+    Route::resource('/kbli', KbliController::class);
+    
+    Route::resource('/dataumum', DataUmumController::class);
+
+    // Hanya superadmin yang boleh kelola
+    Route::middleware(['role:superadmin'])->group(function () {
+
+        
     });
+
+});
 
 // ===================== FRONTEND =====================
 

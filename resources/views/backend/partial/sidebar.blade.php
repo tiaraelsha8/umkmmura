@@ -41,15 +41,25 @@
               <span>Charts</span></a>
       </li>
 
+      <li class="nav-item">
+          <a class="nav-link" href="{{ route('kbli.index') }}">
+              <i class="fas fa-fw fa-book"></i>
+              <span>Kelola KBLI</span></a>
+      </li>
+
+      <li class="nav-item">
+          <a class="nav-link" href="{{ route('dataumum.index') }}">
+              <i class="fas fa-fw fa-book"></i>
+              <span>Kelola Data Umum</span></a>
+      </li>
+
       <!-- Menu khusus Superadmin -->
       @if (Auth::check() && Auth::user()->role === 'superadmin')
-
           <li class="nav-item">
-              <a class="nav-link" href="{{ route ('user.index') }}">
+              <a class="nav-link" href="{{ route('user.index') }}">
                   <i class="fas fa-fw fa-users"></i>
                   <span>Kelola User</span></a>
           </li>
-          
       @endif
 
 

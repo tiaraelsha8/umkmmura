@@ -11,9 +11,10 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('kblis', function (Blueprint $table) {
-            $table->id();
-            $table->string('kode');
+            $table->id('id_kbli'); // penting! ini harus sama dengan references() di pivot
+            $table->string('kode')->unique();
             $table->string('nama');
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }

@@ -109,7 +109,8 @@
     <script src="{{ asset('templateadmin/js/demo/chart-area-demo.js') }}"></script>
     <script src="{{ asset('templateadmin/js/demo/chart-pie-demo.js') }}"></script>
     <script src="{{ asset('templateadmin/js/demo/datatables-demo.js') }}"></script>
-
+    
+    @stack('scripts')
 </body>
 
 </html>
