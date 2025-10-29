@@ -15,7 +15,7 @@ class DataUmumController extends Controller
      */
     public function index()
     {
-        $dataUmums = DataUmum::with('kblis')->latest()->get();
+        $dataUmums = DataUmum::with('kblis')->oldest()->get();
         return view('backend.dataumum.index', compact('dataUmums'));
     }
 
@@ -78,8 +78,13 @@ class DataUmumController extends Controller
      */
     public function edit(string $id)
     {
+        // ambil data umum berdasarkan id
+        $dataUmum = DataUmum::with('kblis')->findOrFail($id);
+
+        // ambil semua data kbli untuk dropdown / pilihan
         $kblis = Kbli::all();
-        return view('data_umum.edit', compact('dataUmum', 'kblis'));
+
+        return view('backend.dataumum.edit', compact('dataUmum', 'kblis'));
     }
 
     /**
@@ -87,21 +92,36 @@ class DataUmumController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $dataUmum = DataUmum::findOrFail($id);
+
         $request->validate([
-            'nib' => 'required|unique:data_umums,nib,' . $dataUmum->id,
-            'nama_usaha' => 'required',
-            'nama_pemilik' => 'required',
+            'nib' => 'required|unique:data_umums,nib,' . $id . ',id_umum',
+            'nama_perusahaan' => 'required',
+            'uraian_jenis' => 'required',
             'alamat' => 'required',
             'kecamatan' => 'required',
             'kelurahan' => 'required',
-            'kbli_ids' => 'required|array',
+            'nilai_investasi' => 'nullable|integer',
+            'izin_nib' => 'nullable|boolean',
+            'izin_usaha' => 'nullable|boolean',
         ]);
 
-        $dataUmum->update($request->except('kbli_ids'));
-        $dataUmum->kblis()->sync($request->kbli_ids);
+        $dataUmum->update([
+            'nib' => $request->nib,
+            'nama_perusahaan' => $request->nama_perusahaan,
+            'uraian_jenis' => $request->uraian_jenis,
+            'alamat' => $request->alamat,
+            'kelurahan' => $request->kelurahan,
+            'kecamatan' => $request->kecamatan,
+            'nilai_investasi' => $request->nilai_investasi,
+            'izin_nib' => $request->has('izin_nib'),
+            'izin_usaha' => $request->has('izin_usaha'),
+        ]);
+
+        $dataUmum->kblis()->sync($request->kbli_ids ?? []);
 
         return redirect()
-            ->route('data-umum.index')
+            ->route('dataumum.index')
             ->with(['success' => 'Data berhasil diedit!']);
     }
 
@@ -110,9 +130,17 @@ class DataUmumController extends Controller
      */
     public function destroy(string $id)
     {
-        $dataUmum->delete();
-        return redirect()
-            ->route('data-umum.index')
-            ->with(['success' => 'Data berhasil dihapus!']);
+        try {
+            $dataUmum = DataUmum::findOrFail($id);
+            $dataUmum->delete();
+
+            return redirect()
+                ->route('dataumum.index')
+                ->with(['success' => 'Data berhasil dihapus!']);
+        } catch (QueryException $e) {
+            return redirect()
+                ->route('dataumum.index')
+                ->with(['error' => 'Gagal menghapus data umum!']);
+        }
     }
 }

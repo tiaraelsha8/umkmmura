@@ -96,21 +96,29 @@ class KbliController extends Controller
     public function destroy(string $id)
     {
         try {
-            //get by ID
-            $kbli = kbli::findOrFail($id);
+            $kbli = Kbli::withCount('dataUmum')->findOrFail($id);
 
-            //delete
+            // Cek apakah KBLI masih dipakai di Data Umum
+            if ($kbli->data_umum_count > 0) {
+                return redirect()
+                    ->route('kbli.index')
+                    ->with(['error' => 'Tidak bisa menghapus! KBLI masih digunakan oleh Data Umum.']);
+            }
+
+            // Jika tidak dipakai, baru hapus
             $kbli->delete();
 
-            //redirect to index
             return redirect()
                 ->route('kbli.index')
-                ->with(['success' => 'Data Berhasil Dihapus!']);
+                ->with(['success' => 'Data KBLI berhasil dihapus!']);
         } catch (QueryException $e) {
-            // Jika gagal karena masih dipakai (foreign key restrict)
             return redirect()
                 ->route('kbli.index')
-                ->with(['error' => 'Tidak bisa menghapus! Jabatan masih digunakan oleh pegawai.']);
+                ->with(['error' => 'Terjadi error database. Tidak bisa menghapus data KBLI.']);
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('kbli.index')
+                ->with(['error' => 'Terjadi kesalahan saat menghapus data.']);
         }
     }
 }
