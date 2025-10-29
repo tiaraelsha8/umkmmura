@@ -24,7 +24,9 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <a href="{{ route('dataumum.create') }}" class="btn btn-primary btn-sm mb-3 mt-3">Tambah</a>
+                    @if (Auth::check() && in_array(Auth::user()->role, ['admin', 'superadmin']))
+                        <a href="{{ route('dataumum.create') }}" class="btn btn-primary btn-sm mb-3 mt-3">Tambah</a>
+                    @endif
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
