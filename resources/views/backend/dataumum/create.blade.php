@@ -68,8 +68,8 @@
                             @enderror
 
                             <div class="form-group">
-                                <label>Kelurahan</label>
-                                <input type="text" class="form-control" name="kelurahan" placeholder="Isikan Kelurahan">
+                                <label>Kelurahan/Desa</label>
+                                <input type="text" class="form-control" name="kelurahan" placeholder="Isikan Kelurahan/Desa">
                             </div>
                             @error('kelurahan')
                                 <div class="alert alert-danger">{{ $message }}</div>
@@ -126,7 +126,7 @@
 
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-primary">Simpan</button>
-                                <a href="{{ route('dataumum.index') }}" class="btn btn-default">Kembali</a>
+                                <a href="{{ route('dataumum.index') }}" class="btn btn-secondary">Kembali</a>
                             </div>
                         </div>
                     </form>

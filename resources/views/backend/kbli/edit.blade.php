@@ -61,7 +61,7 @@
 
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-primary">Simpan</button>
-                                <a href="{{ route('kbli.index') }}" class="btn btn-default">Kembali</a>
+                                <a href="{{ route('kbli.index') }}" class="btn btn-secondary">Kembali</a>
                             </div>
                         </div>
                     </form>

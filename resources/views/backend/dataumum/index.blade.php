@@ -24,9 +24,34 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
+
+                    {{-- Tampilkan tombol tambah hanya untuk admin/superadmin --}}
                     @if (Auth::check() && in_array(Auth::user()->role, ['admin', 'superadmin']))
                         <a href="{{ route('dataumum.create') }}" class="btn btn-primary btn-sm mb-3 mt-3">Tambah</a>
                     @endif
+
+                    {{-- Filter Kecamatan & Kelurahan --}}
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label for="filterKecamatan">Filter Kecamatan</label>
+                            <select id="filterKecamatan" class="form-control">
+                                <option value="">-- Semua Kecamatan --</option>
+                                @foreach ($dataUmums->pluck('kecamatan')->unique() as $kecamatan)
+                                    <option value="{{ $kecamatan }}">{{ $kecamatan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="filterKelurahan">Filter Kelurahan</label>
+                            <select id="filterKelurahan" class="form-control">
+                                <option value="">-- Semua Kelurahan/Desa --</option>
+                                @foreach ($dataUmums->pluck('kelurahan')->unique() as $kelurahan)
+                                    <option value="{{ $kelurahan }}">{{ $kelurahan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
@@ -35,7 +60,7 @@
                                 <th>Nama Perusahaan</th>
                                 <th>Uraian Jenis</th>
                                 <th>Alamat</th>
-                                <th>Kelurahan</th>
+                                <th>Kelurahan/Desa</th>
                                 <th>Kecamatan</th>
                                 <th>Nilai Investasi</th>
                                 <th>Kode KBLI</th>
@@ -93,3 +118,31 @@
 
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const filterKecamatan = document.getElementById("filterKecamatan");
+        const filterKelurahan = document.getElementById("filterKelurahan");
+        const tableRows = document.querySelectorAll("#dataTable tbody tr");
+
+        function filterTable() {
+            const kecamatanValue = filterKecamatan.value.toLowerCase();
+            const kelurahanValue = filterKelurahan.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                const kecamatanText = row.children[6]?.textContent.toLowerCase() || "";
+                const kelurahanText = row.children[5]?.textContent.toLowerCase() || "";
+
+                const matchKecamatan = !kecamatanValue || kecamatanText.includes(kecamatanValue);
+                const matchKelurahan = !kelurahanValue || kelurahanText.includes(kelurahanValue);
+
+                row.style.display = (matchKecamatan && matchKelurahan) ? "" : "none";
+            });
+        }
+
+        filterKecamatan.addEventListener("change", filterTable);
+        filterKelurahan.addEventListener("change", filterTable);
+    });
+</script>
+@endpush

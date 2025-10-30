@@ -69,7 +69,7 @@
                             @enderror
 
                             <div class="form-group">
-                                <label>Kelurahan</label>
+                                <label>Kelurahan/Desa</label>
                                 <input type="text" class="form-control" name="kelurahan"
                                     value="{{ $dataUmum->kelurahan }}">
                             </div>
@@ -131,7 +131,7 @@
 
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-primary">Simpan</button>
-                                <a href="{{ route('dataumum.index') }}" class="btn btn-default">Kembali</a>
+                                <a href="{{ route('dataumum.index') }}" class="btn btn-secondary">Kembali</a>
                             </div>
                         </div>
                     </form>
