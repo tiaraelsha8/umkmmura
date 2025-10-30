@@ -18,38 +18,55 @@
               <span>Dashboard</span></a>
       </li>
 
-      <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item">
-          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-              aria-expanded="true" aria-controls="collapseTwo">
-              <i class="fas fa-fw fa-cog"></i>
-              <span>Components</span>
-          </a>
-          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-              <div class="bg-white py-2 collapse-inner rounded">
-                  <h6 class="collapse-header">Custom Components:</h6>
-                  <a class="collapse-item" href="buttons.html">Buttons</a>
-                  <a class="collapse-item" href="cards.html">Cards</a>
-              </div>
-          </div>
-      </li>
-
-      <!-- Nav Item - Charts -->
-      <li class="nav-item">
-          <a class="nav-link" href="charts.html">
-              <i class="fas fa-fw fa-chart-area"></i>
-              <span>Charts</span></a>
-      </li>
-
-      <!-- Menu khusus Superadmin -->
-      @if (Auth::check() && Auth::user()->role === 'superadmin')
+      <!-- Menu untuk Admin -->
+      @if (Auth::check() && Auth::user()->role === 'admin')
+          <li class="nav-item">
+              <a class="nav-link" href="{{ route('kbli.index') }}">
+                  <i class="fas fa-fw fa-book"></i>
+                  <span>Kelola KBLI</span>
+              </a>
+          </li>
 
           <li class="nav-item">
-              <a class="nav-link" href="{{ route ('user.index') }}">
-                  <i class="fas fa-fw fa-users"></i>
-                  <span>Kelola User</span></a>
+              <a class="nav-link" href="{{ route('dataumum.index') }}">
+                  <i class="fas fa-fw fa-book"></i>
+                  <span>Kelola Data Umum</span>
+              </a>
           </li>
-          
+      @endif
+
+      <!-- Menu untuk Superadmin -->
+      @if (Auth::check() && Auth::user()->role === 'superadmin')
+          <li class="nav-item">
+              <a class="nav-link" href="{{ route('kbli.index') }}">
+                  <i class="fas fa-fw fa-book"></i>
+                  <span>Kelola KBLI</span>
+              </a>
+          </li>
+
+          <li class="nav-item">
+              <a class="nav-link" href="{{ route('dataumum.index') }}">
+                  <i class="fas fa-fw fa-book"></i>
+                  <span>Kelola Data Umum</span>
+              </a>
+          </li>
+
+          <li class="nav-item">
+              <a class="nav-link" href="{{ route('user.index') }}">
+                  <i class="fas fa-fw fa-users"></i>
+                  <span>Kelola User</span>
+              </a>
+          </li>
+      @endif
+
+      <!-- Menu untuk Viewer -->
+      @if (Auth::check() && Auth::user()->role === 'viewer')
+          <li class="nav-item">
+              <a class="nav-link" href="{{ route('dataumum.index') }}">
+                  <i class="fas fa-fw fa-book"></i>
+                  <span>Data Umum</span>
+              </a>
+          </li>
       @endif
 
 
