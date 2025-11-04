@@ -9,6 +9,7 @@ use App\Models\DataUmum;
 use App\Models\Kbli;
 use Illuminate\Database\QueryException;
 
+
 class DataUmumController extends Controller
 {
     /**
@@ -17,7 +18,8 @@ class DataUmumController extends Controller
     public function index()
     {
         $dataUmums = DataUmum::with('kblis')->oldest()->get();
-        return view('backend.dataumum.index', compact('dataUmums'));
+        $kblis     = Kbli::orderBy('kode')->get();
+        return view('backend.dataumum.index', compact('dataUmums', 'kblis'));
     }
 
     /**

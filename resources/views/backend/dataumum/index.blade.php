@@ -30,7 +30,7 @@
                         <a href="{{ route('dataumum.create') }}" class="btn btn-primary btn-sm mb-3 mt-3">Tambah</a>
                     @endif
 
-                    {{-- Filter Kecamatan & Kelurahan --}}
+                    {{-- Filter --}}
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <label for="filterKecamatan">Filter Kecamatan</label>
@@ -47,6 +47,15 @@
                                 <option value="">-- Semua Kelurahan/Desa --</option>
                                 @foreach ($dataUmums->pluck('kelurahan')->unique() as $kelurahan)
                                     <option value="{{ $kelurahan }}">{{ $kelurahan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="filterKbli">Filter Kode KBLI</label>
+                            <select id="filterKbli" class="form-control">
+                                <option value="">-- Semua Kode KBLI --</option>
+                                @foreach ($kblis as $kbli)
+                                    <option value="{{ $kbli->kode }}">{{ $kbli->kode }} - {{ $kbli->nama }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -120,29 +129,70 @@
 @endsection
 
 @push('scripts')
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const filterKecamatan = document.getElementById("filterKecamatan");
-        const filterKelurahan = document.getElementById("filterKelurahan");
-        const tableRows = document.querySelectorAll("#dataTable tbody tr");
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const $kec = document.getElementById('filterKecamatan');
+            const $kel = document.getElementById('filterKelurahan');
+            const $kb = document.getElementById('filterKbli');
+            const $rows = Array.from(document.querySelectorAll('#dataTable tbody tr'));
 
-        function filterTable() {
-            const kecamatanValue = filterKecamatan.value.toLowerCase();
-            const kelurahanValue = filterKelurahan.value.toLowerCase();
+            function normalize(s) {
+                return (s || '').toString().trim().toLowerCase();
+            }
 
-            tableRows.forEach(row => {
-                const kecamatanText = row.children[6]?.textContent.toLowerCase() || "";
-                const kelurahanText = row.children[5]?.textContent.toLowerCase() || "";
+            function applyFilter() {
+                const selKec = normalize($kec?.value);
+                const selKel = normalize($kel?.value);
+                const selKb = normalize($kb?.value);
 
-                const matchKecamatan = !kecamatanValue || kecamatanText.includes(kecamatanValue);
-                const matchKelurahan = !kelurahanValue || kelurahanText.includes(kelurahanValue);
+                $rows.forEach(row => {
+                    // ambil teks dari kolom kecamatan (kolom index 6), kelurahan (5), kode KBLI (8)
+                    // sesuaikan index jika kolommu berbeda
+                    const cols = row.querySelectorAll('td');
+                    if (cols.length === 0) {
+                        row.style.display = 'none';
+                        return;
+                    }
 
-                row.style.display = (matchKecamatan && matchKelurahan) ? "" : "none";
+                    const txtKec = normalize(cols[6]?.textContent);
+                    const txtKel = normalize(cols[5]?.textContent);
+                    const txtKbli = normalize(cols[8]
+                    ?.textContent); // bisa berisi "101, 102" -> kita cari substring
+
+                    let visible = true;
+                    if (selKec && !txtKec.includes(selKec)) visible = false;
+                    if (selKel && !txtKel.includes(selKel)) visible = false;
+                    if (selKb && !txtKbli.includes(selKb)) visible = false;
+
+                    row.style.display = visible ? '' : 'none';
+                });
+            }
+
+            [$kec, $kel, $kb].forEach(el => {
+                if (!el) return;
+                el.addEventListener('change', applyFilter);
+                // jika pakai select2, juga jalankan event change dari select2
+                if (window.jQuery && $(el).hasClass('select2-hidden-accessible')) {
+                    $(el).on('select2:select select2:unselect change', applyFilter);
+                }
             });
-        }
 
-        filterKecamatan.addEventListener("change", filterTable);
-        filterKelurahan.addEventListener("change", filterTable);
-    });
-</script>
+            // optional: reset filter button (jika ada)
+            const resetBtn = document.getElementById('resetFilters');
+            if (resetBtn) resetBtn.addEventListener('click', () => {
+                if ($kec) $kec.value = '';
+                if ($kel) $kel.value = '';
+                if ($kb) $kb.value = '';
+                if (window.jQuery) {
+                    if ($kec) $($kec).trigger('change');
+                    if ($kel) $($kel).trigger('change');
+                    if ($kb) $($kb).trigger('change');
+                }
+                applyFilter();
+            });
+
+            // jalankan awal agar terlihat terfilter ketika page load
+            applyFilter();
+        });
+    </script>
 @endpush
