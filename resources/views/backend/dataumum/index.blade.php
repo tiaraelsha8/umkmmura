@@ -76,6 +76,9 @@
                                 <th>Judul KBLI</th>
                                 <th>Izin NIB</th>
                                 <th>Izin Usaha</th>
+                                 @if (Auth::check() && in_array(Auth::user()->role, ['admin', 'superadmin']))
+                                <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
