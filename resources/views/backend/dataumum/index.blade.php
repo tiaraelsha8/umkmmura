@@ -76,7 +76,6 @@
                                 <th>Judul KBLI</th>
                                 <th>Izin NIB</th>
                                 <th>Izin Usaha</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -103,6 +102,7 @@
                                         {!! $value->izin_usaha == 1 ? '✅' : '❌' !!}
                                     </td>
 
+                                    @if (Auth::check() && in_array(Auth::user()->role, ['admin', 'superadmin']))
                                     <td>
                                         <form action="{{ route('dataumum.destroy', $value->id_umum) }}" method="POST"
                                             onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
@@ -113,6 +113,8 @@
                                             <input type="submit" value="Hapus" class="btn btn-danger btn-sm">
                                         </form>
                                     </td>
+                                    @endif
+
                                 </tr>
                             @empty
                                 <tr>

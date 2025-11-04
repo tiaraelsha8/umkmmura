@@ -19,7 +19,6 @@ use App\Http\Controllers\frontend\HomeController;
 
 // ===================== LOGIN =====================
 Route::middleware('guest')->group(function () {
-
     Route::get('/umkmlogin', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/umkmlogin', [AuthController::class, 'login'])->name('login.submit');
 
@@ -30,7 +29,6 @@ Route::middleware('guest')->group(function () {
     // Reset password
     Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
-
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -38,25 +36,25 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // ===================== BACKEND =====================
 Route::prefix('admin')->middleware('auth')->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('backend.dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('backend.dashboard');
 
-    Route::get('/profile/edit/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
+        Route::get('/profile/edit/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
 
-    
+        Route::resource('/dataumum', DataUmumController::class);
 
-    Route::resource('/kbli', KbliController::class);
-    Route::post('kbli-import', [KbliController::class, 'import'])->name('kbli.import');
-    
-    Route::resource('/dataumum', DataUmumController::class);
+         // Hanya superadmin dan admin yang boleh kelola
+        Route::middleware(['role:admin,superadmin'])->group(function () {
+            Route::resource('/kbli', KbliController::class);
+            Route::post('kbli-import', [KbliController::class, 'import'])->name('kbli.import');
+        });
 
-    // Hanya superadmin yang boleh kelola
-    Route::middleware(['role:superadmin'])->group(function () {
-        Route::resource('/user', UserController::class);
-        
+        // Hanya superadmin yang boleh kelola
+        Route::middleware(['role:superadmin'])->group(function () {
+            Route::resource('/user', UserController::class);
+        });
+      
     });
-
-});
 
 // ===================== FRONTEND =====================
 
