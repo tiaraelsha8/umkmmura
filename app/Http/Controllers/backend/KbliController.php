@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
+use App\Imports\KbliImport;
 use Illuminate\Http\Request;
 use App\Models\Kbli;
+use Illuminate\Database\QueryException;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KbliController extends Controller
 {
@@ -120,5 +123,19 @@ class KbliController extends Controller
                 ->route('kbli.index')
                 ->with(['error' => 'Terjadi kesalahan saat menghapus data.']);
         }
+    }
+
+    public function import(Request $request)
+    {
+
+        //validate form
+        $request->validate([
+            'file' => 'required|max:2048'
+        ]);
+
+        Excel::import(new KbliImport, $request->file('file'));
+
+        //redirect to index
+        return redirect()->route('kbli.index')->with(['success' => 'Data Berhasil Disimpan!']);
     }
 }

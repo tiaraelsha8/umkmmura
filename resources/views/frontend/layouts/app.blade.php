@@ -19,6 +19,7 @@
 
     <!-- Custom styles for this template-->
     <link href="{{ asset('templateadmin/css/sb-admin-2.min.css') }}" rel="stylesheet">
+    
 
 </head>
 
@@ -28,7 +29,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        @include('frontend.partial.sidebar')
+        {{-- @include('frontend.partial.sidebar') --}}
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -100,6 +101,7 @@
     <!-- Page level custom scripts -->
     <script src="{{ asset('templateadmin/js/demo/chart-area-demo.js') }}"></script>
     <script src="{{ asset('templateadmin/js/demo/chart-pie-demo.js') }}"></script>
+    
 
 </body>
 

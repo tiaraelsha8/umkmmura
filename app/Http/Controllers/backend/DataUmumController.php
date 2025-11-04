@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\DataUmum;
 use App\Models\Kbli;
+use Illuminate\Database\QueryException;
 
 class DataUmumController extends Controller
 {

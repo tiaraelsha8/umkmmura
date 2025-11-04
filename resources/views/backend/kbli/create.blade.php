@@ -25,6 +25,39 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
+                <!-- Tombol untuk membuka modal -->
+                <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#importModal">
+                    Import Data KBLI dari File
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form method="POST" action="{{ route('kbli.import') }}" enctype="multipart/form-data"
+                            class="modal-content">
+                            @csrf
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="importModalLabel">Import Data KBLI</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="file">Pilih File</label>
+                                    <input type="file" name="file" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -57,7 +90,7 @@
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
 
-    
+
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-primary">Simpan</button>
                                 <a href="{{ route('kbli.index') }}" class="btn btn-secondary">Kembali</a>

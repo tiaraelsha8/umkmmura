@@ -43,15 +43,16 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/profile/edit/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
 
-    Route::resource('/user', UserController::class);
+    
 
     Route::resource('/kbli', KbliController::class);
+    Route::post('kbli-import', [KbliController::class, 'import'])->name('kbli.import');
     
     Route::resource('/dataumum', DataUmumController::class);
 
     // Hanya superadmin yang boleh kelola
     Route::middleware(['role:superadmin'])->group(function () {
-
+        Route::resource('/user', UserController::class);
         
     });
 
