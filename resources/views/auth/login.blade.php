@@ -23,6 +23,9 @@
     <!-- fish eye-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('image/lambang_mura.png') }}">
+
     <!-- Google reCAPTCHA Script -->
     {!! NoCaptcha::renderJs() !!}
 
@@ -41,7 +44,13 @@
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                            <div class="col-lg-6 d-none d-lg-block bg-white text-center"
+                                style="display: flex; align-items: center; justify-content: center;">
+                                <div>
+                                    <img src="{{ asset('image/lambang_mura.png') }}" alt="Logo UMKM"
+                                        style="width: 800px; max-width: 100%; height: auto;">
+                                </div>
+                            </div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
@@ -92,7 +101,8 @@
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
                                             Login
                                         </button>
-                                        <a href="{{ route('password.request') }}" class="btn btn-secondary btn-user btn-block">
+                                        <a href="{{ route('password.request') }}"
+                                            class="btn btn-secondary btn-user btn-block">
                                             Lupa Password
                                         </a>
                                     </form>

@@ -26,6 +26,9 @@
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('image/lambang_mura.png') }}">
+
 </head>
 
 <body id="page-top">
