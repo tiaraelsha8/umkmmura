@@ -17,6 +17,7 @@ use App\Http\Controllers\backend\DataUmumController;
 // FRONTEND
 use App\Http\Controllers\frontend\HomeController;
 
+
 // ===================== LOGIN =====================
 Route::middleware('guest')->group(function () {
     Route::get('/umkmlogin', [AuthController::class, 'showLogin'])->name('login');
@@ -59,3 +60,4 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 // ===================== FRONTEND =====================
 
 Route::get('/', [HomeController::class, 'index'])->name('beranda');
+Route::get('/dataumkm', [HomeController::class, 'DataUMKM'])->name('data-umkm');

@@ -12,8 +12,9 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     public function index()
-    {   
+    {
         $dataUmums = DataUmum::with('kblis')->oldest()->get();
+        $kblis     = Kbli::orderBy('kode')->get();
 
         //Total UMKM
         $total_umkm = DataUmum::Count();
@@ -32,9 +33,16 @@ class HomeController extends Controller
         $jmlhkelurahan = $data_kel->pluck('total_nib')->toArray();
 
         $data_kbli = kbli::withCount('dataUmum')->get();
-        $kbli = $data_kbli->pluck('nama')->toArray();
+        $namakbli = $data_kbli->pluck('nama')->toArray();
         $jmlhkbli = $data_kbli->pluck('data_umum_count')->toArray();
         //dd($jmlhkbli);
-        return view('frontend.home', compact('dataUmums','total_umkm','namakecamatan','jmlhkecamatan','namakelurahan','jmlhkelurahan','kbli','jmlhkbli'));
+        return view('frontend.home', compact('dataUmums', 'kblis', 'total_umkm', 'namakecamatan', 'jmlhkecamatan', 'namakelurahan', 'jmlhkelurahan', 'namakbli', 'jmlhkbli'));
+    }
+
+    public function DataUMKM()
+    {
+        $dataUmums = DataUmum::with('kblis')->oldest()->get();
+        $kblis     = Kbli::orderBy('kode')->get();
+        return view('frontend.dataumum.index', compact('dataUmums', 'kblis'));
     }
 }
