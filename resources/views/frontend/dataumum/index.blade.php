@@ -47,6 +47,18 @@
                                 @endforeach
                             </select>
                         </div>
+                         {{-- FILTER NILAI INVESTASI --}}
+                        <div class="col-md-3">
+                            <label for="filterInvestasi">Filter Nilai Investasi</label>
+                            <input type="text" id="filterInvestasi" class="form-control"
+                                placeholder="Masukkan nilai investasi...">
+                        </div>
+                        {{-- TOMBOL RESET --}}
+                        <div class="col-md-3 d-flex align-items-end mt-4">
+                            <button id="resetFilters" class="btn btn-secondary w-100 ms-2">
+                                Reset Filter
+                            </button>
+                        </div>
                     </div>
 
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -105,25 +117,29 @@
         </div>
 
     </div>
-    <script>
+   <script>
         document.addEventListener('DOMContentLoaded', function() {
             const $kec = document.getElementById('filterKecamatan');
             const $kel = document.getElementById('filterKelurahan');
             const $kb = document.getElementById('filterKbli');
+            const $inv = document.getElementById('filterInvestasi');
             const $rows = Array.from(document.querySelectorAll('#dataTable tbody tr'));
 
             function normalize(s) {
                 return (s || '').toString().trim().toLowerCase();
             }
 
+            function cleanNumber(num) {
+                return num.replace(/\./g, "").trim();
+            }
+
             function applyFilter() {
                 const selKec = normalize($kec?.value);
                 const selKel = normalize($kel?.value);
                 const selKb = normalize($kb?.value);
+                const selInv = cleanNumber(normalize($inv?.value)); // input user
 
                 $rows.forEach(row => {
-                    // ambil teks dari kolom kecamatan (kolom index 6), kelurahan (5), kode KBLI (8)
-                    // sesuaikan index jika kolommu berbeda
                     const cols = row.querySelectorAll('td');
                     if (cols.length === 0) {
                         row.style.display = 'none';
@@ -132,18 +148,23 @@
 
                     const txtKec = normalize(cols[6]?.textContent);
                     const txtKel = normalize(cols[5]?.textContent);
-                    const txtKbli = normalize(cols[8]
-                        ?.textContent); // bisa berisi "101, 102" -> kita cari substring
+                    const txtKbli = normalize(cols[8]?.textContent);
+                    const txtInv = cleanNumber(normalize(cols[7]?.textContent)); // dari tabel
 
                     let visible = true;
+
                     if (selKec && !txtKec.includes(selKec)) visible = false;
                     if (selKel && !txtKel.includes(selKel)) visible = false;
                     if (selKb && !txtKbli.includes(selKb)) visible = false;
+
+                    // ⭐ FILTER INVESTASI — HARUS DIAWALI DENGAN ANGKA YANG DICARI
+                    if (selInv && txtInv !== selInv) visible = false;
 
                     row.style.display = visible ? '' : 'none';
                 });
             }
 
+            // Event filter select
             [$kec, $kel, $kb].forEach(el => {
                 if (!el) return;
                 el.addEventListener('change', applyFilter);
@@ -153,12 +174,20 @@
                 }
             });
 
+            // Event untuk filter investasi (ketik)
+            if ($inv) {
+                $inv.addEventListener('keyup', applyFilter);
+                $inv.addEventListener('change', applyFilter);
+            }
+
             // optional: reset filter button (jika ada)
             const resetBtn = document.getElementById('resetFilters');
             if (resetBtn) resetBtn.addEventListener('click', () => {
                 if ($kec) $kec.value = '';
                 if ($kel) $kel.value = '';
                 if ($kb) $kb.value = '';
+                if ($inv) $inv.value = '';
+
                 if (window.jQuery) {
                     if ($kec) $($kec).trigger('change');
                     if ($kel) $($kel).trigger('change');
